@@ -1,34 +1,46 @@
-import tkinter as tk
+import customtkinter as ctk
 from tkinter import messagebox
 import os
+import sys
+
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
 
 def launch_gui(hosts, light_mode):
-    bg_color = "#ffffff" if light_mode else "#1e1e1e"
-    fg_color = "#000000" if light_mode else "#ffffff"
-    btn_color = "#f0f0f0" if light_mode else "#333333"
-
-    def connect_ssh(event=None):
-        selection = listbox.curselection()
-        if selection:
-            host = listbox.get(selection[0])
+    def connect_ssh(host):
+        if host:  # Ensure the host is valid
             os.system(f'start wt ssh {host}')
         else:
-            messagebox.showinfo("No selection", "Please select a host to connect.")
+            messagebox.showinfo("No selection", "Please select a valid host.")
 
-    root = tk.Tk()
-    root.title("SSH Launcher")
-    root.configure(bg=bg_color)
+    class App(ctk.CTk):  # Use customtkinter's CTk as the base class
+        def __init__(self):
+            super().__init__()
+            self.title("VerySSH")
+            icon_path = resource_path("ssh_launcher/assets/icon.ico")
+            self.iconbitmap(icon_path)
+            self.geometry("250x300")  # Set a default window size
+            self.minsize(250, 200)  # Set a minimum window size
 
-    tk.Label(root, text="Select SSH Host:", bg=bg_color, fg=fg_color).pack(pady=5)
+            # Set the appearance mode (dark or light)
+            ctk.set_appearance_mode("Dark" if not light_mode else "Light")
+            ctk.set_default_color_theme("dark-blue")  # Optional: Set a color theme
 
-    listbox = tk.Listbox(root, width=50, height=20, bg=bg_color, fg=fg_color, selectbackground="#444444")
-    listbox.pack(padx=10, pady=5)
+            # Create a scrollable frame to hold the buttons
+            self.host_buttons_frame = ctk.CTkScrollableFrame(self)
+            self.host_buttons_frame.pack(fill="both", expand=True)
 
-    for host in hosts:
-        listbox.insert(tk.END, host)
+            # Create a button for each host
+            for host in hosts:
+                button = ctk.CTkButton(
+                    self.host_buttons_frame, 
+                    text=host, 
+                    command=lambda h=host: connect_ssh(h),
+                    anchor="w"  # Align text to the left
+                )
+                button.pack(padx=10, pady=5, fill="x")
 
-    btn = tk.Button(root, text="Connect", bg=btn_color, fg=fg_color, command=connect_ssh)
-    btn.pack(pady=10)
-
-    root.bind('<Return>', connect_ssh)
-    root.mainloop()
+    app = App()
+    app.mainloop()

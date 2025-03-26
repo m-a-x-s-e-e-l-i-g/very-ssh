@@ -31,10 +31,10 @@ Simply double-click the downloaded `.exe` file to launch the application.
 
 If you prefer to build the executable yourself, follow these steps:
 
-### 1. Install PyInstaller
+### 1. Install Requirements
 
 ```bash
-pip install pyinstaller
+pip install -r requirements.txt
 ```
 
 ### 2. Build executable

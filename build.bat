@@ -7,8 +7,8 @@ rmdir /s /q dist >nul 2>&1
 del ssh-launcher.spec >nul 2>&1
 
 :: Run PyInstaller build
-pyinstaller --onefile --noconsole launcher.py --name ssh-launcher --collect-submodules ssh_launcher
+pyinstaller --onefile --noconsole launcher.py --name ssh-launcher --collect-submodules ssh_launcher --add-data "ssh_launcher/assets/icon.ico;ssh_launcher/assets" --icon "ssh_launcher/assets/icon.ico" 
 
 echo.
-echo Build complete! Find your exe in /dist/
-pause
+echo Build complete! 
+echo Find your exe in /dist/
