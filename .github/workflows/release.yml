@@ -1,0 +1,42 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: pip install pyinstaller
+
+      # Build the executable
+      - name: Build executable
+        run: |
+          pyinstaller --onefile --noconsole launcher.py --name ssh-launcher --collect-submodules ssh_launcher
+        shell: cmd
+
+      # Upload the executable as a release asset
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: dist/ssh-launcher.exe
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            Automatic release for version ${{ github.ref_name }}.
