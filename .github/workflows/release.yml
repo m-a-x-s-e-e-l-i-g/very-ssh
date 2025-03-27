@@ -36,7 +36,7 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: dist/ssh-launcher.exe
+          artifacts: dist/VerySSH.exe
           token: ${{ secrets.TOKEN }}
           tag: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
