@@ -10,7 +10,6 @@ SSH keychain 🔑🔗
 - Parses `~/.ssh/config` and lists all hosts
 - Click to connect via Windows Terminal (`wt ssh <host>`)
 - Auto light/dark mode based on Windows settings
-- No external dependencies
 - Cross-compatible with any Python 3.x install on Windows
 
 ---
@@ -57,13 +56,20 @@ ssh_launcher/
 ├── config.py           # SSH config parsing
 ├── theme.py            # Windows theme detection
 ├── ui.py               # GUI logic
+├── assets/
+│   └── icon.ico        # Application icon
 .github/
 └── workflows/
     └── release.yml     # GitHub Actions workflow for releases
+assets/
+├── banner.png          # Banner image for documentation
+├── icon.ai             # Editable icon source
+└── icon.png            # Icon image
 build.bat               # Build script for PyInstaller
 launcher.py             # Launcher script for the standalone executable
 README.md               # Project documentation
 LICENSE                 # License file
+requirements.txt        # Python dependencies
 ```
 
 ---
