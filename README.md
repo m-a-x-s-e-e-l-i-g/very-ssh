@@ -1,5 +1,9 @@
 # VerySSH - Windows SSH Launcher
 
+![Build](https://img.shields.io/github/actions/workflow/status/m-a-x-s-e-e-l-i-g/very-ssh/release.yml)
+![License](https://img.shields.io/github/license/m-a-x-s-e-e-l-i-g/very-ssh)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+
 A minimal, fast GUI for quickly launching SSH sessions from your `~/.ssh/config`.  
 SSH keychain 🔑🔗  
 ![screenshots](assets/banner.png)
@@ -10,8 +14,7 @@ SSH keychain 🔑🔗
 - Parses `~/.ssh/config` and lists all hosts
 - Click to connect via Windows Terminal (`wt ssh <host>`)
 - Auto light/dark mode based on Windows settings
-- Cross-compatible with any Python 3.x install on Windows
-
+- Minimal, fast, and easy to use
 ---
 
 ## 🚀 How to Run
@@ -85,6 +88,10 @@ Host my-server
 ```
 
 ---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request. For major changes, discuss them first by opening an issue.
 
 ## License
 
