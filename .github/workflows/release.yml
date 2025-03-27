@@ -29,7 +29,7 @@ jobs:
       # Build the executable
       - name: Build executable
         run: |
-          pyinstaller --onefile --noconsole launcher.py --name ssh-launcher --collect-submodules ssh_launcher --add-data "ssh_launcher/assets/icon.ico;ssh_launcher/assets" --icon "ssh_launcher/assets/icon.ico"
+          pyinstaller --onefile --noconsole launcher.py --name VerySSH --collect-submodules ssh_launcher --add-data "ssh_launcher/assets/icon.ico;ssh_launcher/assets" --icon "ssh_launcher/assets/icon.ico"
         shell: cmd
 
       # Upload the executable as a release asset

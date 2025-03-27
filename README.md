@@ -1,8 +1,8 @@
 # VerySSH - Windows SSH Launcher
 
 A minimal, fast GUI for quickly launching SSH sessions from your `~/.ssh/config`.  
-Built with native Python + Tkinter.
-
+SSH keychain 🔑🔗  
+![screenshots](assets/banner.png)
 ---
 
 ## 🔧 Features
