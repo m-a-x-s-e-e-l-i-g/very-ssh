@@ -22,7 +22,8 @@ def launch_gui(hosts, light_mode):
             icon_path = resource_path("ssh_launcher/assets/icon.ico")
             self.iconbitmap(icon_path)
             self.geometry("250x300")  # Set a default window size
-            self.minsize(250, 200)  # Set a minimum window size
+            self.minsize(250, 150)  # Set a minimum window size
+            self.resizable(False, True)  # Disable horizontal resizing
 
             # Set the appearance mode (dark or light)
             ctk.set_appearance_mode("Dark" if not light_mode else "Light")
@@ -40,7 +41,7 @@ def launch_gui(hosts, light_mode):
                     command=lambda h=host: connect_ssh(h),
                     anchor="w"  # Align text to the left
                 )
-                button.pack(padx=10, pady=5, fill="x")
+                button.pack(padx=0, pady=2, fill="x")
 
     app = App()
     app.mainloop()
