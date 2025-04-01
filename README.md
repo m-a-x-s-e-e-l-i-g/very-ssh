@@ -15,7 +15,15 @@ SSH keychain 🔑🔗
 - Click to connect via Windows Terminal (`wt ssh <host>`)
 - Auto light/dark mode based on Windows settings
 - Minimal, fast, and easy to use
+- Easy keyboard navigation
 ---
+
+## ⌨️ Keyboard Shortcuts
+**Type to filter hosts**
+- **Arrow Up/Down**: Navigate through the list of hosts
+- **Enter**: Connect to the selected host
+- **Esc**: Close the application
+- **Delete**: Clear the filter
 
 ## 🚀 How to Run
 
