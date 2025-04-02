@@ -2,6 +2,7 @@ import customtkinter as ctk
 from tkinter import messagebox
 import os
 import sys
+import subprocess
 
 def resource_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
@@ -11,7 +12,7 @@ def resource_path(relative_path):
 def launch_gui(hosts, light_mode):
     def connect_ssh(host):
         if host:
-            os.system(f'start wt ssh {host}')
+            subprocess.Popen(['wt', 'ssh', host], shell=True)
         else:
             messagebox.showinfo("No selection", "Please select a valid host.")
 
