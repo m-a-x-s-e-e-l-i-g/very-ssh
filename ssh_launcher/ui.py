@@ -83,22 +83,31 @@ def launch_gui(hosts, light_mode):
             self.bind("<Escape>", self.close_application)
 
         def update_selected_index(self, index):
-            self.selected_index = index
-            self.highlight_selected_button()
+            if self.selected_index != index:
+                previous_index = self.selected_index
+                self.selected_index = index
+                self.update_button_highlight(previous_index)
+                self.update_button_highlight(self.selected_index)
 
-        def highlight_selected_button(self):
-            for i, button in enumerate(self.host_buttons):
-                button.configure(fg_color="#14375e" if i == self.selected_index else "#1f538d")
+        def update_button_highlight(self, index):
+            if 0 <= index < len(self.host_buttons):
+                self.host_buttons[index].configure(
+                    fg_color="#14375e" if index == self.selected_index else "#1f538d"
+                )
 
         def move_cursor_up(self, event):
             if self.host_buttons:
+                previous_index = self.selected_index
                 self.selected_index = max(self.selected_index - 1, 0)
-                self.highlight_selected_button()
+                self.update_button_highlight(previous_index)
+                self.update_button_highlight(self.selected_index)
 
         def move_cursor_down(self, event):
             if self.host_buttons:
+                previous_index = self.selected_index
                 self.selected_index = min(self.selected_index + 1, len(self.host_buttons) - 1)
-                self.highlight_selected_button()
+                self.update_button_highlight(previous_index)
+                self.update_button_highlight(self.selected_index)
 
         def open_selected_host(self, event):
             if 0 <= self.selected_index < len(self.host_buttons):
