@@ -62,6 +62,22 @@ def launch_gui(hosts, light_mode):
                 button.destroy()
             self.host_buttons.clear()
 
+            # Remove the "No results found" label if it exists
+            if hasattr(self, "no_results_label") and self.no_results_label:
+                self.no_results_label.destroy()
+                self.no_results_label = None
+
+            if not self.hosts:
+                # Display a message when there are no hosts
+                self.no_results_label = ctk.CTkLabel(
+                    self.host_buttons_frame,
+                    text="No results found.",
+                    anchor="center",
+                    font=("Arial", 12, "italic")
+                )
+                self.no_results_label.pack(pady=10)
+                return
+
             for index, host in enumerate(self.hosts):
                 button = ctk.CTkButton(
                     self.host_buttons_frame, 
