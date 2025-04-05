@@ -83,11 +83,10 @@ def launch_gui(hosts, light_mode):
             self.bind("<Escape>", self.close_application)
 
         def update_selected_index(self, index):
-            if self.selected_index != index:
-                previous_index = self.selected_index
-                self.selected_index = index
-                self.update_button_highlight(previous_index)
-                self.update_button_highlight(self.selected_index)
+            previous_index = self.selected_index
+            self.selected_index = index
+            self.update_button_highlight(previous_index)
+            self.update_button_highlight(self.selected_index)
 
         def update_button_highlight(self, index):
             if 0 <= index < len(self.host_buttons):
