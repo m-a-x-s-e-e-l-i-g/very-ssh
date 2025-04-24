@@ -3,11 +3,14 @@
 ![Build](https://img.shields.io/github/actions/workflow/status/m-a-x-s-e-e-l-i-g/very-ssh/release.yml)
 ![License](https://img.shields.io/github/license/m-a-x-s-e-e-l-i-g/very-ssh)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+[![Download VerySSH](https://img.shields.io/sourceforge/dt/very-ssh.svg)](https://sourceforge.net/projects/very-ssh/files/latest/download)
 
 A minimal, fast GUI for quickly launching SSH sessions from your `~/.ssh/config`.  
 SSH keychain 🔑🔗  
 ![screenshots](assets/banner.png)
 ---
+
+[![Download VerySSH](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/very-ssh/files/latest/download)
 
 ## 🔧 Features
 
