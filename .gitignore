@@ -11,6 +11,7 @@ bin/
 
 # Installer logs
 pip-log.txt
+*.log
 
 # IDE/editor files
 .vscode/

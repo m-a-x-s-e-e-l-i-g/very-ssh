@@ -1,11 +1,22 @@
 import os
-import re
 
 def parse_ssh_config():
     ssh_config_path = os.path.expanduser("~/.ssh/config")
     hosts = []
-    if os.path.exists(ssh_config_path):
-        with open(ssh_config_path, "r") as f:
-            content = f.read()
-            hosts = re.findall(r"^\s*Host\s+([^\s*?]+)", content, re.MULTILINE)
+
+    if not os.path.exists(ssh_config_path):
+        return hosts
+
+    with open(ssh_config_path, "r") as config_file:
+        for line in config_file:
+            parts = line.lstrip().split()
+            if len(parts) < 2 or parts[0] != "Host":
+                continue
+
+            host = parts[1]
+            if "*" in host or "?" in host:
+                continue
+
+            hosts.append(host)
+
     return hosts

@@ -58,6 +58,25 @@ Run the build script:
 build.bat
 ```
 
+This default build uses `onedir` for faster startup.
+Executable path:
+
+```bash
+dist/VerySSH/VerySSH.exe
+```
+
+If you need a single-file executable (slower startup), run:
+
+```bash
+build.bat onefile
+```
+
+Single-file output path:
+
+```bash
+dist/VerySSH.exe
+```
+
 Output will be in the `dist/` folder.
 
 ---

@@ -20,6 +20,8 @@ def launch_gui(hosts, light_mode):
         IGNORED_KEYS = {"Shift_L", "Shift_R", "Control_L", "Control_R", 
                         "Alt_L", "Alt_R", "Caps_Lock", "Tab", 
                         "Left", "Right", "Up", "Down"}
+        SELECTED_FG = "#14375e"
+        DEFAULT_FG = "#1f538d"
 
         def __init__(self):
             super().__init__()
@@ -39,8 +41,13 @@ def launch_gui(hosts, light_mode):
 
         def initialize_variables(self, hosts):
             self.search_var = ctk.StringVar()
-            self.hosts = hosts
+            self.all_hosts = list(hosts)
+            self.all_hosts_lower = [host.lower() for host in self.all_hosts]
+            self.hosts = list(self.all_hosts)
             self.host_buttons = []
+            self.visible_button_count = 0
+            self.no_results_label = None
+            self.no_results_visible = False
             self.selected_index = -1
 
         def create_widgets(self):
@@ -58,38 +65,61 @@ def launch_gui(hosts, light_mode):
             self.host_buttons_frame.pack(fill="both", expand=True, padx=0, pady=0)
 
         def create_host_buttons(self):
-            for button in self.host_buttons:
-                button.destroy()
-            self.host_buttons.clear()
+            visible_count = len(self.hosts)
 
-            # Remove the "No results found" label if it exists
-            if hasattr(self, "no_results_label") and self.no_results_label:
-                self.no_results_label.destroy()
-                self.no_results_label = None
-
-            if not self.hosts:
-                # Display a message when there are no hosts
+            if self.no_results_label is None:
                 self.no_results_label = ctk.CTkLabel(
                     self.host_buttons_frame,
                     text="No results found.",
                     anchor="center",
                     font=("Arial", 12, "italic")
                 )
-                self.no_results_label.pack(pady=10)
+
+            if visible_count == 0:
+                if self.visible_button_count:
+                    for button in self.host_buttons[:self.visible_button_count]:
+                        button.pack_forget()
+                    self.visible_button_count = 0
+                if not self.no_results_visible:
+                    self.no_results_label.pack(pady=10)
+                    self.no_results_visible = True
+                self.selected_index = -1
                 return
 
-            for index, host in enumerate(self.hosts):
+            if self.no_results_visible:
+                self.no_results_label.pack_forget()
+                self.no_results_visible = False
+
+            while len(self.host_buttons) < visible_count:
+                index = len(self.host_buttons)
                 button = ctk.CTkButton(
-                    self.host_buttons_frame, 
-                    text=host, 
-                    command=lambda h=host: connect_ssh(h),
+                    self.host_buttons_frame,
+                    text="",
+                    command=lambda idx=index: self.connect_host_by_index(idx),
                     anchor="w"
                 )
-                button.pack(padx=0, pady=2, fill="x")
-                self.host_buttons.append(button)
                 button.bind("<Enter>", lambda event, idx=index: self.update_selected_index(idx))
+                self.host_buttons.append(button)
 
+            for index, host in enumerate(self.hosts):
+                button = self.host_buttons[index]
+                button.configure(text=host, fg_color=self.DEFAULT_FG)
+
+            if self.visible_button_count < visible_count:
+                for button in self.host_buttons[self.visible_button_count:visible_count]:
+                    button.pack(padx=0, pady=2, fill="x")
+            elif self.visible_button_count > visible_count:
+                for button in self.host_buttons[visible_count:self.visible_button_count]:
+                    button.pack_forget()
+
+            self.visible_button_count = visible_count
+
+            self.selected_index = -1
             self.update_selected_index(0)
+
+        def connect_host_by_index(self, index):
+            if 0 <= index < len(self.hosts):
+                connect_ssh(self.hosts[index])
 
         def bind_events(self):
             self.bind("<Key>", self.global_search)
@@ -105,36 +135,43 @@ def launch_gui(hosts, light_mode):
             self.update_button_highlight(self.selected_index)
 
         def update_button_highlight(self, index):
-            if 0 <= index < len(self.host_buttons):
+            if 0 <= index < len(self.hosts):
                 self.host_buttons[index].configure(
-                    fg_color="#14375e" if index == self.selected_index else "#1f538d"
+                    fg_color=self.SELECTED_FG if index == self.selected_index else self.DEFAULT_FG
                 )
 
         def move_cursor_up(self, event):
-            if self.host_buttons:
+            if self.hosts:
                 previous_index = self.selected_index
                 self.selected_index = max(self.selected_index - 1, 0)
                 self.update_button_highlight(previous_index)
                 self.update_button_highlight(self.selected_index)
 
         def move_cursor_down(self, event):
-            if self.host_buttons:
+            if self.hosts:
                 previous_index = self.selected_index
-                self.selected_index = min(self.selected_index + 1, len(self.host_buttons) - 1)
+                self.selected_index = min(self.selected_index + 1, len(self.hosts) - 1)
                 self.update_button_highlight(previous_index)
                 self.update_button_highlight(self.selected_index)
 
         def open_selected_host(self, event):
-            if 0 <= self.selected_index < len(self.host_buttons):
+            if 0 <= self.selected_index < len(self.hosts):
                 connect_ssh(self.hosts[self.selected_index])
 
         def filter_hosts(self):
             search_term = self.search_var.get().lower()
-            self.hosts = [host for host in hosts if search_term in host.lower()]
+            if not search_term:
+                self.hosts = self.all_hosts
+            else:
+                self.hosts = [
+                    host for host, host_lower in zip(self.all_hosts, self.all_hosts_lower)
+                    if search_term in host_lower
+                ]
             self.create_host_buttons()
 
         def global_search(self, event):
-            if event.keysym not in self.IGNORED_KEYS and (event.char.isprintable() or event.keysym in ("BackSpace", "Delete")):
+            is_text_input = bool(event.char) and event.char.isprintable()
+            if event.keysym not in self.IGNORED_KEYS and (is_text_input or event.keysym in ("BackSpace", "Delete")):
                 current_text = self.search_var.get()
                 if event.keysym == "BackSpace":
                     self.search_var.set(current_text[:-1])
@@ -143,7 +180,6 @@ def launch_gui(hosts, light_mode):
                 else:
                     self.search_var.set(current_text + event.char)
                 self.filter_hosts()
-                self.update_selected_index(0)
 
         def close_application(self, event):
             self.destroy()
